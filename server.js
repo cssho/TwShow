@@ -9,17 +9,17 @@ var client = new twitter({
     access_token_key: process.env.tw_access_token,
     access_token_secret: process.env.tw_access_token_secret
 });
-app.get('/image_url', function (req, res) {
+app.get('/image_url', function(req, res) {
     console.log(req);
     if (!req.query.tags) req.query.tags = '';
     if (req.query.static) res.send(JSON.parse(fs.readFileSync('./sample.json', 'utf8')));
     else getMediaUrls(req, res, []);
 });
-app.get('/image_url_test', function (req, res) {
+app.get('/image_url_test', function(req, res) {
     //console.log(fs.readFileSync('./sample.json', 'utf8'));
     res.send(JSON.parse(fs.readFileSync('./sample.json', 'utf8')));
 });
-app.listen(13454);
+app.listen(process.env.PORT || 5000);
 
 function getMediaUrls(req, res, result, maxId) {
     let params = {
@@ -31,7 +31,7 @@ function getMediaUrls(req, res, result, maxId) {
         max_id: maxId,
         tweet_mode: 'extended'
     };
-    client.get('statuses/user_timeline', params, function (error, tweet, response) {
+    client.get('statuses/user_timeline', params, function(error, tweet, response) {
         if (error) {
             console.log(error);
             return;
