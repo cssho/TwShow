@@ -1,0 +1,21 @@
+{
+  "name": "twshow",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "cloudnode@git.cloudno.de:/git/cssho/5454-4d03696902bc24b7edc949e954286a93.git"
+  },
+  "author": "cssho",
+  "license": "MIT",
+  "devDependencies": {
+    "big-integer": "^1.6.27",
+    "express": "^4.16.3",
+    "twitter": "^1.7.1"
+  }
+}

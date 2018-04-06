@@ -1,0 +1,83 @@
+body {
+    background-color: rgb(29, 29, 29);
+}
+
+html,
+body {
+    height: 100%;
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+}
+
+.slider-for {
+    padding-bottom: 20px;
+    height: 70%;
+    width: 70%;
+}
+
+.slider-text {
+    padding-bottom: 20px;
+    height: 70%;
+    width: 30%;
+}
+
+.slider-for div {
+    text-align: center;
+    padding: 5px 10px;
+}
+
+.slider-nav {
+    height: 30%;
+    width: 90%;
+    margin: 0 auto;
+}
+
+.slider-nav .slick-slide {
+    height: 95%;
+}
+
+.slider-nav p {
+    text-align: center;
+    margin: 20px 10px;
+    padding: 10px 0;
+    height: 100%;
+}
+
+.slider-for img,
+video {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.slider-nav img {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.main-container {
+    display: flex;
+}
+.tweet{
+    background-color: rgba(255, 255, 255, 0.5);
+    color: white;
+    font-size: 24pt;
+    margin-right: 20px;
+}
+
+img,
+video {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.slick-prev:before,
+.slick-next:before {
+    font-size: 60px;
+}
+
+.slick-prev {
+    left: -70px;
+}
