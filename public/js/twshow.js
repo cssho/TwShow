@@ -34,7 +34,8 @@ $(document).ready(function() {
     $.get('image_url', {
         screen_name: arg.user ? arg.user : "somasomaneko",
         tags: (arg.tags || arg.tags == '') ? arg.tags : "白猫,ミルキー",
-        static: location.search.includes('static') ? 't' : null
+        static: location.search.includes('static') ? 't' : null,
+        ov: location.search.includes('ov') ? 't' : null
     }, function(data) {
         data.map((x, i) => {
             $('.slider-for').slick('slickAdd', x.video != null ? '<div id="for_' +

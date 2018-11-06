@@ -2,6 +2,7 @@ var express = require('express');
 var app = express();
 var twitter = require('twitter');
 var fs = require('fs');
+var moment = require('moment');
 app.use(express.static('public'));
 var client = new twitter({
     consumer_key: process.env.tw_api_key,
@@ -12,6 +13,7 @@ var client = new twitter({
 app.get('/image_url', function(req, res) {
     console.log(req);
     if (!req.query.tags) req.query.tags = '';
+    if (!req.query.limit) req.query.limit = 100;
     if (req.query.static) res.send(JSON.parse(fs.readFileSync('./sample.json', 'utf8')));
     else getMediaUrls(req, res, []);
 });
@@ -42,7 +44,15 @@ function getMediaUrls(req, res, result, maxId) {
                 res.send(result);
                 return;
             }
-            result = result.concat(parsed.data);
+            if (req.query.ov) {
+                result = result.concat(parsed.data.filter(x => x.video));
+            } else {
+                result = result.concat(parsed.data);
+            }
+            if (result && result.length > req.query.limit) {
+                res.send(result);
+                return;
+            }
             getMediaUrls(req, res, result, parsed.maxId);
         }
     });
@@ -50,15 +60,16 @@ function getMediaUrls(req, res, result, maxId) {
 
 function parseTweet(tweet, tags) {
     var matrix = tweet.filter(x => tags && tags[0] == '' ? true :
-            tags.some(z => x.entities.hashtags.map(y => y.text).indexOf(z) >= 0))
-        .filter(x => x.extended_entities).map(x =>
+            tags.some(z => x.entities.hashtags.map(y => y.text).indexOf(decodeURIComponent(z)) >= 0))
+        .filter(x => x.extended_entities && !moment(x.created_at).isBefore(moment().subtract(1, 'months'))).map(x =>
             x.extended_entities.media.map(y => {
                 var videoInfo = y.type == 'video' ? y.video_info.variants.filter(z => z.bitrate) : null;
                 return {
                     image: y.media_url_https,
                     video: y.type == 'video' ? videoInfo.filter(z =>
                         z.bitrate == Math.max.apply(null, videoInfo.map(q => q.bitrate)))[0].url : null,
-                    text: x.full_text.replace(/(https?|ftp)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)/g, '')
+                    text: x.full_text.replace(/(https?|ftp)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)/g, ''),
+                    created_at: moment(x.created_at)
                 };
             }));
     return {
