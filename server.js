@@ -13,9 +13,9 @@ var client = new twitter({
 app.get('/image_url', function(req, res) {
     console.log(req);
     if (!req.query.tags) req.query.tags = '';
-    if (!req.query.limit) req.query.limit = 100;
-    if (req.query.static) res.send(JSON.parse(fs.readFileSync('./sample.json', 'utf8')));
-    else getMediaUrls(req, res, []);
+    if (!req.query.limit) req.query.limit = 20;
+    //if (req.query.static) res.send(JSON.parse(fs.readFileSync('./sample.json', 'utf8')));
+    getMediaUrls(req, res, []);
 });
 app.get('/image_url_test', function(req, res) {
     //console.log(fs.readFileSync('./sample.json', 'utf8'));
@@ -44,11 +44,10 @@ function getMediaUrls(req, res, result, maxId) {
                 res.send(result);
                 return;
             }
-            if (req.query.ov) {
-                result = result.concat(parsed.data.filter(x => x.video));
-            } else {
-                result = result.concat(parsed.data);
-            }
+
+            result = result.concat(req.query.ov
+                ? parsed.data.filter(x => x.video)
+                : parsed.data);
             if (result && result.length > req.query.limit) {
                 res.send(result);
                 return;
