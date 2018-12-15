@@ -66,12 +66,17 @@ video {
     margin-right: 20px;
 }
 
-img,
-video {
+.slick-slide > p > img {
     width: auto;
     height: auto;
     max-width: 100%;
     max-height: 100%;
+}
+
+.main {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
 }
 
 .slick-prev:before,
@@ -81,4 +86,13 @@ video {
 
 .slick-prev {
     left: -70px;
+}
+
+
+.fullscreeen-icon {
+    width: 100px;
+    height: 100px;
+    position: fixed;
+    top: 10px;
+    left: 10px;
 }

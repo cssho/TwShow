@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
     var arg = new Object;
     url = location.search.substring(1).split('&');
 
@@ -13,7 +13,9 @@ $(document).ready(function() {
         fade: true,
         asNavFor: '.slider',
         autoplay: true,
-        autoplaySpeed: 3000
+        autoplaySpeed: 3500,
+        pauseOnFocus: false,
+        pauseOnHover: false,
     });
     $('.slider-text').slick({
         slidesToShow: 1,
@@ -31,12 +33,19 @@ $(document).ready(function() {
         focusOnSelect: true,
         variableWidth: true
     });
+
+    $('.fullscreeen-icon').on('click', function () {
+
+        $('.fullscreeen-icon').toggle();
+        toggleFullscreen();
+    });
     $.get('image_url', {
         screen_name: arg.user ? arg.user : "somasomaneko",
         tags: (arg.tags || arg.tags == '') ? arg.tags : "里親募集中",
         static: location.search.includes('static') ? 't' : null,
-        ov: location.search.includes('ov') ? 't' : null
-    }, function(data) {
+        ov: location.search.includes('ov') ? 't' : null,
+        limit: arg.limit ? arg.limit : 100
+    }, function (data) {
         data.map((x, i) => {
             $('.slider-for').slick('slickAdd', x.video != null ? '<div id="for_' +
                 i + '" ><video class="main" src="' + x.video + '" muted/></div>' :
@@ -46,20 +55,20 @@ $(document).ready(function() {
                 '" src="' + x.image + '"></p></div>');
             $('.slider-text').slick('slickAdd', '<div><p class="tweet">' + x.text + '</p></div>');
             if (x.video != null) {
-                $('#for_' + i).children('video').on('pause', function() {
+                $('#for_' + i).children('video').on('pause', function () {
                     $('.slider-for').slick('slickNext');
                 });
             }
         });
     });
-    $('.slider-for').on('afterChange', function(slick, slideState) {
+    $('.slider-for').on('afterChange', function (slick, slideState) {
         var video = $('#for_' + slideState.currentSlide).children('video');
         if (video.length) {
             video.get(0).play();
             $('.slider-for').slick('slickPause');
         }
     });
-    $('.slider-for').on('beforeChange', function(slick, slideState) {
+    $('.slider-for').on('beforeChange', function (slick, slideState) {
 
         $('.slider-for').slick('slickPlay');
         var video = $('#for_' + slideState.currentSlide).children('video');
@@ -67,5 +76,39 @@ $(document).ready(function() {
             video.get(0).pause();;
         }
     });
+    $('.slider-for').on('click', function () {
+        $('.slider-for').slick(!isFullScreen() ? 'slickPlay' : 'slickPause');
+        toggleFullscreen($('.slick-active > .main').get(0));
+    });
 
 });
+
+function toggleFullscreen(elem) {
+    elem = elem || document.documentElement;
+    if (isFullScreen()) {
+        if (elem.requestFullscreen) {
+            elem.requestFullscreen();
+        } else if (elem.msRequestFullscreen) {
+            elem.msRequestFullscreen();
+        } else if (elem.mozRequestFullScreen) {
+            elem.mozRequestFullScreen();
+        } else if (elem.webkitRequestFullscreen) {
+            elem.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+        }
+    } else {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+        } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+        }
+    }
+}
+
+function isFullScreen() {
+    return !document.fullscreenElement && !document.mozFullScreenElement &&
+        !document.webkitFullscreenElement && !document.msFullscreenElement;
+}
