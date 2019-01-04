@@ -1,4 +1,4 @@
-$(document).ready(function () {
+$(document).ready(function() {
     var arg = new Object;
     url = location.search.substring(1).split('&');
 
@@ -34,7 +34,7 @@ $(document).ready(function () {
         variableWidth: true
     });
 
-    $('.fullscreeen-icon').on('click', function () {
+    $('.fullscreeen-icon').on('click', function() {
 
         $('.fullscreeen-icon').toggle();
         toggleFullscreen(document.documentElement);
@@ -44,8 +44,9 @@ $(document).ready(function () {
         tags: (arg.tags || arg.tags == '') ? arg.tags : "里親募集中",
         static: location.search.includes('static') ? 't' : null,
         ov: location.search.includes('ov') ? 't' : null,
-        limit: arg.limit ? arg.limit : 100
-    }, function (data) {
+        limit: arg.limit ? arg.limit : 100,
+        from: arg.from
+    }, function(data) {
         data.map((x, i) => {
             $('.slider-for').slick('slickAdd', x.video != null ? '<div id="for_' +
                 i + '" ><video class="main" src="' + x.video + '" muted/></div>' :
@@ -55,20 +56,20 @@ $(document).ready(function () {
                 '" src="' + x.image + '"></p></div>');
             $('.slider-text').slick('slickAdd', '<div><p class="tweet">' + x.text + '</p></div>');
             if (x.video != null) {
-                $('#for_' + i).children('video').on('pause', function () {
+                $('#for_' + i).children('video').on('pause', function() {
                     $('.slider-for').slick('slickNext');
                 });
             }
         });
     });
-    $('.slider-for').on('afterChange', function (slick, slideState) {
+    $('.slider-for').on('afterChange', function(slick, slideState) {
         var video = $('#for_' + slideState.currentSlide).children('video');
         if (video.length) {
             video.get(0).play();
             $('.slider-for').slick('slickPause');
         }
     });
-    $('.slider-for').on('beforeChange', function (slick, slideState) {
+    $('.slider-for').on('beforeChange', function(slick, slideState) {
 
         $('.slider-for').slick('slickPlay');
         var video = $('#for_' + slideState.currentSlide).children('video');
@@ -76,7 +77,7 @@ $(document).ready(function () {
             video.get(0).pause();;
         }
     });
-    $('.slider-for').on('click', function () {
+    $('.slider-for').on('click', function() {
         var request = toggleFullscreen($('.slick-active > .main').get(0));
 
         $('.slider-for').slick(request ? 'slickPause' : 'slickPlay');
