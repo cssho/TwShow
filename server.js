@@ -13,6 +13,7 @@ var client = new twitter({
 app.get('/image_url', function(req, res) {
     console.log(req);
     if (!req.query.tags) req.query.tags = '';
+    if (!req.query.text) req.query.text = '';
     if (!req.query.limit) req.query.limit = 20;
     if (!req.query.from) req.query.from = 1;
     //if (req.query.static) res.send(JSON.parse(fs.readFileSync('./sample.json', 'utf8')));
@@ -40,7 +41,7 @@ function getMediaUrls(req, res, result, maxId) {
             return;
         }
         if (tweet.length >= 1) {
-            var parsed = parseTweet(tweet, req.query.tags.split(','), req.query.from);
+            var parsed = parseTweet(tweet, req.query.tags.split(','), req.query.from,req.query.text.split(','));
             if (parsed.maxId == maxId) {
                 res.send(result);
                 return;
@@ -58,9 +59,11 @@ function getMediaUrls(req, res, result, maxId) {
     });
 }
 
-function parseTweet(tweet, tags, from) {
+function parseTweet(tweet, tags, from, text) {
     var matrix = tweet.filter(x => tags && tags[0] == '' ? true :
             tags.some(z => x.entities.hashtags.map(y => y.text).indexOf(decodeURIComponent(z)) >= 0))
+            .filter(x => text && text[0] == '' ? true :
+            text.some(z => x.full_text.indexOf(decodeURIComponent(z)) >= 0))
         .filter(x => x.extended_entities && !moment(x.created_at).isBefore(moment().subtract(from, 'months'))).map(x =>
             x.extended_entities.media.map(y => {
                 var videoInfo = y.type == 'video' ? y.video_info.variants.filter(z => z.bitrate) : null;

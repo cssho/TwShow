@@ -42,7 +42,8 @@ $(document).ready(function() {
     });
     $.get('image_url', {
         screen_name: arg.user ? arg.user : "somasomaneko",
-        tags: (arg.tags || arg.tags == '') ? arg.tags : "里親募集中",
+        tags: arg.tags,
+        text: arg.text,
         static: location.search.includes('static') ? 't' : null,
         ov: location.search.includes('ov') ? 't' : null,
         limit: arg.limit ? arg.limit : 100,
