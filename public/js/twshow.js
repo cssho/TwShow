@@ -31,7 +31,8 @@ $(document).ready(function() {
         dots: false,
         centerMode: true,
         focusOnSelect: true,
-        variableWidth: true
+        variableWidth: true,
+        swipeToSlide: true
     });
 
     $('.fullscreeen-icon').on('click', function() {
