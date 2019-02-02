@@ -71,7 +71,8 @@ function parseTweet(tweet, tags, from, text) {
                     image: y.media_url_https,
                     video: y.type == 'video' ? videoInfo.filter(z =>
                         z.bitrate == Math.max.apply(null, videoInfo.map(q => q.bitrate)))[0].url : null,
-                    text: x.full_text.replace(/(https?|ftp)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)/g, ''),
+                    text: x.full_text.replace(/(https?|ftp)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)/g, '')
+                        .replace(/#\S+\s*/g, ''),
                     created_at: moment(x.created_at)
                 };
             }));
