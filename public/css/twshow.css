@@ -96,3 +96,11 @@ video {
     top: 10px;
     left: 10px;
 }
+
+.reload-icon {
+    width: 50px;
+    height: 50px;
+    position: fixed;
+    top: 10px;
+    left: 65px;
+}

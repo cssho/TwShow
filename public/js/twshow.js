@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
     var arg = new Object;
     url = location.search.substring(1).split('&');
 
@@ -35,11 +35,44 @@ $(document).ready(function() {
         swipeToSlide: true
     });
 
-    $('.fullscreeen-icon').on('click', function() {
-
+    $('.fullscreeen-icon').on('click', function () {
         $('.fullscreeen-icon').toggle();
         toggleFullscreen(document.documentElement);
     });
+
+    $('.reload-icon').on('click', function () {
+        loadFromWeb(arg);
+    });
+    var data = localStorage.getItem(url);
+    if (data) {
+        setData(JSON.parse(data));
+    } else {
+        loadFromWeb(arg);
+    }
+    $('.slider-for').on('afterChange', function (slick, slideState) {
+        var video = $('#for_' + slideState.currentSlide).children('video');
+        if (video.length) {
+            video.get(0).play();
+            $('.slider-for').slick('slickPause');
+        }
+    });
+    $('.slider-for').on('beforeChange', function (slick, slideState) {
+
+        $('.slider-for').slick('slickPlay');
+        var video = $('#for_' + slideState.currentSlide).children('video');
+        if (video.length) {
+            video.get(0).pause();;
+        }
+    });
+    $('.slider-for').on('click', function () {
+        var request = toggleFullscreen($('.slick-active > .main').get(0));
+
+        $('.slider-for').slick(request ? 'slickPause' : 'slickPlay');
+    });
+
+});
+
+function loadFromWeb(arg) {
     $.get('image_url', {
         screen_name: arg.user ? arg.user : "somasomaneko",
         tags: arg.tags,
@@ -48,44 +81,28 @@ $(document).ready(function() {
         ov: location.search.includes('ov') ? 't' : null,
         limit: arg.limit ? arg.limit : 100,
         from: arg.from
-    }, function(data) {
-        data.map((x, i) => {
-            $('.slider-for').slick('slickAdd', x.video != null ? '<div id="for_' +
-                i + '" ><video class="main" src="' + x.video + '" muted/></div>' :
-                '<div id="for_' + i + '" ><img class="main" src="' + x.image +
-                '"/></div>');
-            $('.slider-nav').slick('slickAdd', '<div><p><img id="nav_' + i +
-                '" src="' + x.image + '"></p></div>');
-            $('.slider-text').slick('slickAdd', '<div><p class="tweet">' + x.text + '</p></div>');
-            if (x.video != null) {
-                $('#for_' + i).children('video').on('pause', function() {
-                    $('.slider-for').slick('slickNext');
-                });
-            }
-        });
+    }, function (data) {
+        localStorage.setItem(url, JSON.stringify(data));
+        setData(data)
     });
-    $('.slider-for').on('afterChange', function(slick, slideState) {
-        var video = $('#for_' + slideState.currentSlide).children('video');
-        if (video.length) {
-            video.get(0).play();
-            $('.slider-for').slick('slickPause');
+}
+
+function setData(data) {
+    data.map((x, i) => {
+        $('.slider-for').slick('slickAdd', x.video != null ? '<div id="for_' +
+            i + '" ><video class="main" src="' + x.video + '" muted/></div>' :
+            '<div id="for_' + i + '" ><img class="main" src="' + x.image +
+            '"/></div>');
+        $('.slider-nav').slick('slickAdd', '<div><p><img id="nav_' + i +
+            '" src="' + x.image + '"></p></div>');
+        $('.slider-text').slick('slickAdd', '<div><p class="tweet">' + x.text + '</p></div>');
+        if (x.video != null) {
+            $('#for_' + i).children('video').on('pause', function () {
+                $('.slider-for').slick('slickNext');
+            });
         }
     });
-    $('.slider-for').on('beforeChange', function(slick, slideState) {
-
-        $('.slider-for').slick('slickPlay');
-        var video = $('#for_' + slideState.currentSlide).children('video');
-        if (video.length) {
-            video.get(0).pause();;
-        }
-    });
-    $('.slider-for').on('click', function() {
-        var request = toggleFullscreen($('.slick-active > .main').get(0));
-
-        $('.slider-for').slick(request ? 'slickPause' : 'slickPlay');
-    });
-
-});
+}
 
 function toggleFullscreen(elem) {
     if (elem == document.documentElement) {

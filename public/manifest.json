@@ -1,0 +1,22 @@
+{
+    "dir": "ltr",
+    "lang": "en",
+    "name": "TwShow",
+    "scope": "/",
+    "display": "browser",
+    "start_url": "https://twshow.herokuapp.com/",
+    "short_name": "TwShow",
+    "theme_color": "transparent",
+    "description": "Generate a slide show from tweet.",
+    "orientation": "any",
+    "background_color": "transparent",
+    "related_applications": [],
+    "prefer_related_applications": false,
+    "generated": "undefined",
+    "icons": [
+        {
+            "src": "https://twshow.herokuapp.com/favicon.ico",
+            "sizes": "16x16 32x32 48x48 64x64"
+        }
+    ]
+}
