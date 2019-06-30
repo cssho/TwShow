@@ -40,9 +40,10 @@ $(document).ready(function () {
         $('.fullscreeen-icon').toggle();
         var isFullScreen = toggleFullscreen(document.documentElement);
 
-        $('.slider-for').css('width', isFullScreen ? '70%' : '');
-        $('.right-container').css('width', isFullScreen ? '30%' : '');
-        $('.slider-nav').css('display', isFullScreen ? 'none' : '');
+        $('.slider-for').css('width', isFullScreen ? '100%' : '');
+        $('.right-container').toggle();
+        // $('.right-container').css('width', isFullScreen ? '30%' : '');
+        // $('.slider-nav').css('display', isFullScreen ? 'none' : '');
     });
 
     $('.reload-icon').on('click', function () {
