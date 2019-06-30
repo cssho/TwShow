@@ -1,4 +1,4 @@
-const CACHE = "twshow-cache";
+const CACHE = "twshow-cache-201906300-1";
 
 const precacheFiles = [
   './index.html',
