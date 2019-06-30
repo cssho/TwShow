@@ -42,7 +42,7 @@ $(document).ready(function () {
 
         $('.slider-for').css('width', isFullScreen ? '70%' : '');
         $('.right-container').css('width', isFullScreen ? '30%' : '');
-        $('.slide-nav').css('display', isFullScreen ? 'none' : '');
+        $('.slider-nav').css('display', isFullScreen ? 'none' : '');
     });
 
     $('.reload-icon').on('click', function () {
