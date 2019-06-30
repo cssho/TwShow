@@ -16,12 +16,7 @@ app.get('/image_url', function(req, res) {
     if (!req.query.text) req.query.text = '';
     if (!req.query.limit) req.query.limit = 20;
     if (!req.query.from) req.query.from = 1;
-    //if (req.query.static) res.send(JSON.parse(fs.readFileSync('./sample.json', 'utf8')));
     getMediaUrls(req, res, []);
-});
-app.get('/image_url_test', function(req, res) {
-    //console.log(fs.readFileSync('./sample.json', 'utf8'));
-    res.send(JSON.parse(fs.readFileSync('./sample.json', 'utf8')));
 });
 app.listen(process.env.PORT || 5000);
 
@@ -73,7 +68,8 @@ function parseTweet(tweet, tags, from, text) {
                         z.bitrate == Math.max.apply(null, videoInfo.map(q => q.bitrate)))[0].url : null,
                     text: x.full_text.replace(/(https?|ftp)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)/g, '')
                         .replace(/#\S+\s*/g, ''),
-                    created_at: moment(x.created_at)
+                    created_at: moment(x.created_at),
+                    isVisible: true
                 };
             }));
     return {

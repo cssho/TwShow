@@ -35,14 +35,47 @@ $(document).ready(function () {
         swipeToSlide: true
     });
 
+    var isFullScreen = false;
     $('.fullscreeen-icon').on('click', function () {
         $('.fullscreeen-icon').toggle();
-        toggleFullscreen(document.documentElement);
+        var isFullScreen = toggleFullscreen(document.documentElement);
+
+        $('.slider-for').css('width', isFullScreen ? '70%' : '');
+        $('.right-container').css('width', isFullScreen ? '30%' : '');
+        $('.slide-nav').css('display', isFullScreen ? 'none' : '');
     });
 
     $('.reload-icon').on('click', function () {
         loadFromWeb(arg);
     });
+    var isPause = false;
+    $('.pp-icon').on('click', function () {
+        isPause = !isPause;
+        $('.slider-for').slick(isPause ? 'slickPause' : 'slickPlay');
+    });
+
+    $('a[data-modal]').click(function (event) {
+        var tbody = $('#setting-table tbody');
+        tbody.empty();
+        $.each(JSON.parse(localStorage.getItem(url)), function (i, x) {
+            tbody.append(
+                $("<tr>")
+                    .append($("<td>").append($('<input type="checkbox" />').prop('checked', x.isVisible)))
+                    .append($("<td>").append($('<img>').prop('src', x.image).addClass('setting-img'))));
+        });
+        $(this).modal();
+        return false;
+    });
+
+    $('#save-setting').on('click', function () {
+        var rows = $('#setting-table tbody tr');
+        var saveData = JSON.parse(localStorage.getItem(url));
+        saveData.forEach((x, i) => x.isVisible = $(rows[i]).find('input').prop('checked'));
+        localStorage.setItem(url, JSON.stringify(saveData));
+        setData(saveData);
+        $.modal.close();
+    });
+
     var data = localStorage.getItem(url);
     if (data) {
         setData(JSON.parse(data));
@@ -73,22 +106,23 @@ $(document).ready(function () {
 });
 
 function loadFromWeb(arg) {
+    $('.reload-icon').css('animation', 'sp-anime 1.5s linear infinite');
     $.get('image_url', {
         screen_name: arg.user ? arg.user : "somasomaneko",
         tags: arg.tags,
         text: arg.text,
-        static: location.search.includes('static') ? 't' : null,
         ov: location.search.includes('ov') ? 't' : null,
         limit: arg.limit ? arg.limit : 100,
         from: arg.from
     }, function (data) {
         localStorage.setItem(url, JSON.stringify(data));
-        setData(data)
+        setData(data);
+        $('.reload-icon').css('animation', '');
     });
 }
 
 function setData(data) {
-    data.map((x, i) => {
+    data.filter(x => x.isVisible).map((x, i) => {
         $('.slider-for').slick('slickAdd', x.video != null ? '<div id="for_' +
             i + '" ><video class="main" src="' + x.video + '" muted/></div>' :
             '<div id="for_' + i + '" ><img class="main" src="' + x.image +
