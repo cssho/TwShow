@@ -49,6 +49,10 @@ $(document).ready(function () {
     $('.reload-icon').on('click', function () {
         loadFromWeb(arg);
     });
+    $(document).on('click', '.setting-img', function () {
+        var cb = $(this).parent('td').prev('td').children('input');
+        cb.prop('checked', !cb.prop('checked'));
+    });
     var isPause = false;
     $('.pp-icon').on('click', function () {
         isPause = !isPause;

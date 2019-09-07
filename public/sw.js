@@ -29,6 +29,7 @@ self.addEventListener("activate", function (event) {
 self.addEventListener("fetch", function (event) {
   if (event.request.method !== "GET") return;
   if (new URL(event.request.url).pathname === "/image_url") return;
+  if(event.request.url.indexOf('http') !== 0) return;
 
   event.respondWith(
     fromCache(event.request).then(
@@ -79,6 +80,6 @@ function fromCache(request) {
 
 function updateCache(request, response) {
   return caches.open(CACHE).then(function (cache) {
-    return cache.put(request, response);
+      return cache.put(request, response);
   });
 }
