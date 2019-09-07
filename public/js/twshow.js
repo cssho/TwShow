@@ -73,12 +73,10 @@ $(document).ready(function () {
     });
 
     $('#save-setting').on('click', function () {
-        var rows = $('#setting-table tbody tr');
-        var saveData = JSON.parse(localStorage.getItem(url));
-        saveData.forEach((x, i) => x.isVisible = $(rows[i]).find('input').prop('checked'));
-        localStorage.setItem(url, JSON.stringify(saveData));
-        setData(saveData);
         $.modal.close();
+    });
+    $('#save-setting').on($.modal.BEFORE_CLOSE, function (event, modal) {
+        saveModal();
     });
 
     var data = localStorage.getItem(url);
@@ -109,6 +107,14 @@ $(document).ready(function () {
     });
 
 });
+
+function saveModal() {
+    var rows = $('#setting-table tbody tr');
+    var saveData = JSON.parse(localStorage.getItem(url));
+    saveData.forEach((x, i) => x.isVisible = $(rows[i]).find('input').prop('checked'));
+    localStorage.setItem(url, JSON.stringify(saveData));
+    setData(saveData);
+}
 
 function loadFromWeb(arg) {
     $('.reload-icon').css('animation', 'sp-anime 1.5s linear infinite');
