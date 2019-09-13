@@ -52,6 +52,7 @@ html, body {
 
 .main-container {
     display: flex;
+    height: 100%;
 }
 
 .tweet {
