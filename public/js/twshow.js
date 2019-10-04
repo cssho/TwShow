@@ -41,9 +41,8 @@ $(document).ready(function () {
         var isFullScreen = toggleFullscreen(document.documentElement);
 
         $('.slider-for').css('width', isFullScreen ? '100%' : '');
+        $('.slider-for').css('height', isFullScreen ? '100%' : '');
         $('.right-container').toggle();
-        // $('.right-container').css('width', isFullScreen ? '30%' : '');
-        // $('.slider-nav').css('display', isFullScreen ? 'none' : '');
     });
 
     $('.reload-icon').on('click', function () {
