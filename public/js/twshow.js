@@ -165,20 +165,25 @@ function toggleFullscreen(elem) {
     if (elem == document.documentElement) {
         if (isNotFullScreen()) {
             requestFullScreen(elem);
+            $('#filter').show();
             return true;
         } else {
             exitFullScreen();
+            $('#filter').hide();
             return false;
         }
     } else {
         if (isNotFullScreen()) {
             requestFullScreen(elem);
+            $('#filter').show();
             return true;
         } else if (getFullScreenElement() == document.documentElement) {
             requestFullScreen(elem);
+            $('#filter').show();
             return true;
         } else {
             exitFullScreen();
+            $('#filter').hide();
             return false;
         }
     }
