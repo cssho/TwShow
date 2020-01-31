@@ -25,7 +25,7 @@ function getMediaUrls(req, res, result, maxId) {
         screen_name: req.query.screen_name,
         count: 200,
         include_rts: false,
-        exclude_replies: true,
+        exclude_replies: false,
         trim_user: true,
         max_id: maxId,
         tweet_mode: 'extended'
