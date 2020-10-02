@@ -125,7 +125,7 @@ function saveModal() {
 function loadFromWeb(arg) {
     $('.reload-icon').css('animation', 'sp-anime 1.5s linear infinite');
     $.get('image_url', {
-        screen_name: arg.user ? arg.user : "somasomaneko",
+        screen_names: arg.user ? [arg.user] : ["somasomaneko","RevyKoko"],
         tags: arg.tags,
         text: arg.text,
         ov: location.search.includes('ov') ? 't' : null,

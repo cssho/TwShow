@@ -10,19 +10,24 @@ var client = new twitter({
     access_token_key: process.env.tw_access_token,
     access_token_secret: process.env.tw_access_token_secret
 });
-app.get('/image_url', function(req, res) {
+app.get('/image_url', async function (req, res) {
     console.log(req);
     if (!req.query.tags) req.query.tags = '';
     if (!req.query.text) req.query.text = '';
-    if (!req.query.limit) req.query.limit = 20;
     if (!req.query.from) req.query.from = 1;
-    getMediaUrls(req, res, []);
+    var result = [];
+    for (const sn of req.query.screen_names) {
+        const data = await getMediaUrls(req, res,  sn);
+        result = result.concat(data);
+    }
+
+    res.send(result);
 });
 app.listen(process.env.PORT || 5000);
 
-function getMediaUrls(req, res, result, maxId) {
+async function getMediaUrls(req, res,  sn, maxId) {
     let params = {
-        screen_name: req.query.screen_name,
+        screen_name: sn,
         count: 200,
         include_rts: false,
         exclude_replies: false,
@@ -30,34 +35,21 @@ function getMediaUrls(req, res, result, maxId) {
         max_id: maxId,
         tweet_mode: 'extended'
     };
-    client.get('statuses/user_timeline', params, function(error, tweet, response) {
-        if (error) {
-            console.log(error);
-            return;
+    const tweet = await client.get('statuses/user_timeline', params);
+    if (tweet.length >= 1) {
+        var parsed = parseTweet(tweet, req.query.tags.split(','), req.query.from, req.query.text.split(','));
+        if (parsed.maxId == maxId) {
+            return [];
         }
-        if (tweet.length >= 1) {
-            var parsed = parseTweet(tweet, req.query.tags.split(','), req.query.from,req.query.text.split(','));
-            if (parsed.maxId == maxId) {
-                res.send(result);
-                return;
-            }
+        return parsed.data.concat(await getMediaUrls(req, res, sn, parsed.maxId));
+    }
 
-            result = result.concat(req.query.ov ?
-                parsed.data.filter(x => x.video) :
-                parsed.data);
-            if (result && result.length > req.query.limit) {
-                res.send(result);
-                return;
-            }
-            getMediaUrls(req, res, result, parsed.maxId);
-        }
-    });
 }
 
 function parseTweet(tweet, tags, from, text) {
     var matrix = tweet.filter(x => tags && tags[0] == '' ? true :
-            tags.some(z => x.entities.hashtags.map(y => y.text).indexOf(decodeURIComponent(z)) >= 0))
-            .filter(x => text && text[0] == '' ? true :
+        tags.some(z => x.entities.hashtags.map(y => y.text).indexOf(decodeURIComponent(z)) >= 0))
+        .filter(x => text && text[0] == '' ? true :
             text.some(z => x.full_text.indexOf(decodeURIComponent(z)) >= 0))
         .filter(x => x.extended_entities && !moment(x.created_at).isBefore(moment().subtract(from, 'months'))).map(x =>
             x.extended_entities.media.map(y => {
