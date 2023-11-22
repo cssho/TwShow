@@ -14,7 +14,7 @@
   "author": "cssho",
   "license": "MIT",
   "dependencies": {
-    "big-integer": "^1.6.51",
+    "big-integer": "^1.6.52",
     "express": "^4.18.1",
     "twitter": "^1.7.1",
     "moment": "^2.29.4"
